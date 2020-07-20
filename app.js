@@ -5,4 +5,8 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.get('/', (req, res, next) => {
+  res.send('>>>>>>>>>');
+})
+
 app.listen(3000);
