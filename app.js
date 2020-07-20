@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
+const mongoose = require('mongoose');
 
 const app = express();
 const events = [];
@@ -48,7 +49,7 @@ app.use('/graphql', graphqlHTTP({
         price: +price,
         date
       };
-      
+
       events.push(event);
       return event;
     }
@@ -56,8 +57,13 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true
 }));
 
-app.get('/', (req, res, next) => {
-  res.send('>>>>>>>>>');
-})
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ljjme.mongodb.net/test?retryWrites=true&w=majority`).then(() => {
+  app.listen(3000);
+}).catch( err => {
+  console.log(err);
+});
 
-app.listen(3000);
+
+
+
+
