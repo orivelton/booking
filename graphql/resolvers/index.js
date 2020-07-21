@@ -9,6 +9,7 @@ const events = async eventIds => {
     {
       ..._doc,
       _id: id,
+      date: new Date(_doc.date).toISOString(),
       creator: user.bind(this, creator)
     }
   ));
@@ -31,11 +32,12 @@ const user = async userId => {
 module.exports = {
   events: () => {
     return Event.find()
-    .then(events => events.map(event => (
+    .then(events => events.map(({ _doc, id}) => (
       { 
-        ...event._doc,
-        _id: event.id,
-        creator: user.bind(this, event._doc.creator)
+        ..._doc,
+        _id: id,
+        date: new Date(_doc.date).toISOString(),
+        creator: user.bind(this, _doc.creator)
       }
     ))).catch(err => {
       throw err;
@@ -55,8 +57,8 @@ module.exports = {
 
     return event
     .save()
-    .then(result => {
-      createdEvent = {...result._doc, _id: result._doc._id.toString(), creator: user.bind(this, result._doc.creator)}
+    .then(({ _doc}) => {
+      createdEvent = {..._doc, _id: _doc._id.toString(), date: new Date(_doc.date).toISOString(), creator: user.bind(this, _doc.creator)}
       return User.findById('5f1705c92281ee3b60af7a55');
     })
     .then(user => {
