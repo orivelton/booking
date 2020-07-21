@@ -111,7 +111,7 @@ app.use('/graphql', graphqlHTTP({
       return event
       .save()
       .then(result => {
-        createdEvent = {...result._doc, _id: result._doc._id.toString()}
+        createdEvent = {...result._doc, _id: result._doc._id.toString(), creator: user.bind(this, result._doc.creator)}
         return User.findById('5f1705c92281ee3b60af7a55');
       })
       .then(user => {
