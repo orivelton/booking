@@ -4,13 +4,38 @@ const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
 const app = express();
-
 const Event = require('./models/event');
 const User = require('./models/user');
-
 const { MONGO_USER, MONGO_PASSWORD, MONGO_DB} = process.env;
+
+
+const events = async eventIds => {
+
+  const events = await Event.find({ _id: { $in: eventIds}}).catch(err => { throw err});
+
+  return events.map(({ _doc, id, creator}) => (
+    {
+      ..._doc,
+      _id: id,
+      creator: user.bind(this, creator)
+    }
+  ));
+
+};
+
+
+const user = async userId => {
+  const { _doc, id } = await User.findById(userId).catch(() => {
+    console.log('error in userId');
+  });
+
+  return {
+    ..._doc,
+    _id: id,
+    createdEvents: events.bind(this, _doc.createdEvents)
+  }
+}
 
 app.use(bodyParser.json());
 
@@ -22,12 +47,14 @@ app.use('/graphql', graphqlHTTP({
       description: String!
       price: Float!
       date: String!
+      creator: User!
     }
 
     type User {
       _id: ID!
       email: String!
       password: String
+      createdEvents: [Event!]
     }
 
     input EventInput {
@@ -58,7 +85,14 @@ app.use('/graphql', graphqlHTTP({
   `),
   rootValue: {
     events: () => {
-      return Event.find().then(events => events.map(event => ({ ...event._doc, _id: event.id }))).catch(err => {
+      return Event.find()
+      .then(events => events.map(event => (
+        { 
+          ...event._doc,
+          _id: event.id,
+          creator: user.bind(this, event._doc.creator)
+        }
+      ))).catch(err => {
         throw err;
       })
     },
