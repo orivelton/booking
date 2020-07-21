@@ -17,7 +17,13 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true
 }));
 
-mongoose.connect(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.ljjme.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true } ).then(() => {
+mongoose.connect(
+  `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.ljjme.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`,
+  { 
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+).then(() => {
   app.listen(3000);
 }).catch( err => {
   console.log(err);
