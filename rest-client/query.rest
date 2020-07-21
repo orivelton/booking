@@ -1,0 +1,46 @@
+GET http://localhost:3000/graphql
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+query {
+  events {
+    title,
+    date
+    creator {
+      email
+      createdEvents {
+        title
+      }
+    }
+  }
+}
+
+###
+
+
+# mutation {
+#   createEvent(
+#     eventInput:{
+#       title: "Test after refactor",
+#       description: "Refactor",
+#       price: 899.99,
+#       date: "2020-07-21T16:14:59.710Z"
+#     }
+#   ) {
+#     title
+#     creator {
+#       email
+#     }
+#   }
+# }
+
+# mutation {
+#   createUser(
+#     userInput: {
+#       email: "test1@test.com",
+#       password: "test1"
+#     }
+#   ) {
+#     _id
+#   }
+# }
