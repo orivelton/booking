@@ -90,7 +90,7 @@ module.exports = {
 
     creator.createdEvents.push(event);
     await creator.save().catch(err => { throw err });
-    
+
     return createdEvent;
   },
 
@@ -122,10 +122,22 @@ module.exports = {
     return {
       ..._doc,
       _id: id,
-      user: user.bind(this, _doc.user),
-      event: singleEvent.bind(this, _doc.event),
+      user: user.bind(this, booking._doc.user),
+      event: singleEvent.bind(this, booking._doc.event),
       createdAt: new Date(_doc.createdAt).toISOString(),
       updatedAt: new Date(_doc.updatedAt).toISOString()
     }
-  }
+  },
+
+  cancelBooking: async ({ bookingId }) => {
+    const { event} = await Booking.findById(bookingId).populate('event').catch(err => { throw err });
+    
+    await Booking.deleteOne({ _id: bookingId }).catch(err => { throw err });
+
+    return {
+      ...event._doc,
+      _id: event.id,
+      creator: user.bind(this, event._doc.creator)
+    };
+  } 
 };
