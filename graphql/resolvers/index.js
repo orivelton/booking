@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const Event = require('../../models/event');
 const User = require('../../models/user');
+const Booking = require('../../models/booking');
 
 const events = async eventIds => {
   const events = await Event.find({ _id: { $in: eventIds}}).catch(err => { throw err });
@@ -28,7 +29,7 @@ const user = async userId => {
 
 module.exports = {
   events: async () => {
-    const events = await Event.find().catch(err => { throw err })
+    const events = await Event.find().catch(err => { throw err });
     
     return events.map(({ _doc, id}) => (
       { 
@@ -39,6 +40,21 @@ module.exports = {
       }
     ))
   },
+
+  bookings: async () => {
+    const bookings = await Booking.find().catch(err => { throw err });
+
+    return bookings.map(({ _doc, id }) => (
+      {
+        ..._doc,
+        _id: id,
+        createdAt: new Date(_doc.createdAt).toISOString(),
+        updatedAt: new Date(_doc.updatedAt).toISOString()
+      }
+    ));
+
+  },
+
   createEvent: async ({ eventInput: { title, description, price, date }}) => {
     let createdEvent;
     const event = new Event({
@@ -80,5 +96,23 @@ module.exports = {
 
     const { _doc, id } = await user.save().catch(err => { throw err });
     return { ..._doc, password: null, _id: id };
+  },
+
+  bookEvent: async ({ eventId }) => {
+    const fetchedEvent = await Event.findOne({ _id: eventId }).catch(err => { throw err });
+
+    const booking = new Booking({
+      user: '5f1705c92281ee3b60af7a55',
+      event: fetchedEvent
+    });
+
+    const { _doc, id } = await booking.save().catch(err => { throw err });
+
+    return {
+      ..._doc,
+      _id: id,
+      createdAt: new Date(_doc.createdAt).toISOString(),
+      updatedAt: new Date(_doc.updatedAt).toISOString()
+    }
   }
 };
