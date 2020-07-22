@@ -2,13 +2,25 @@ const bcrypt = require('bcryptjs');
 const Event = require('../../models/event');
 const User = require('../../models/user');
 const Booking = require('../../models/booking');
+const { dateToString } = require('../../helpers/date');
 
 const transformEvent = ({ _doc, id, creator}) => (
   {
     ..._doc,
     _id: id,
-    date: new Date(_doc.date).toISOString(),
+    date: dateToString(_doc.date),
     creator: user.bind(this, creator)
+  }
+);
+
+const transformBooking = ({ _doc, id }) => (
+  {
+    ..._doc,
+    _id: id,
+    user: user.bind(this, _doc.user),
+    event: singleEvent.bind(this, _doc.event),
+    createdAt: dateToString(_doc.createdAt),
+    updatedAt: dateToString(_doc.updatedAt)
   }
 );
 
@@ -40,17 +52,7 @@ module.exports = {
 
   bookings: async () => {
     const bookings = await Booking.find().catch(err => { throw err });
-
-    return bookings.map(({ _doc, id }) => (
-      {
-        ..._doc,
-        _id: id,
-        user: user.bind(this, _doc.user),
-        event: singleEvent.bind(this, _doc.event),
-        createdAt: new Date(_doc.createdAt).toISOString(),
-        updatedAt: new Date(_doc.updatedAt).toISOString()
-      }
-    ));
+    return bookings.map(booking => transformBooking(booking));
   },
 
   createEvent: async ({ eventInput: { title, description, price, date }}) => {
@@ -100,16 +102,9 @@ module.exports = {
       event: fetchedEvent
     });
 
-    const { _doc, id } = await booking.save().catch(err => { throw err });
+    const result = await booking.save().catch(err => { throw err });
 
-    return {
-      ..._doc,
-      _id: id,
-      user: user.bind(this, booking._doc.user),
-      event: singleEvent.bind(this, booking._doc.event),
-      createdAt: new Date(_doc.createdAt).toISOString(),
-      updatedAt: new Date(_doc.updatedAt).toISOString()
-    }
+    return transformBooking(result);
   },
 
   cancelBooking: async ({ bookingId }) => {
@@ -119,7 +114,7 @@ module.exports = {
         _id: bookingId 
       }
     ).catch(err => { throw err });
-    
+
     return transformEvent(event);
   } 
 };
