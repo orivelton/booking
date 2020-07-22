@@ -16,6 +16,15 @@ const events = async eventIds => {
   ));
 };
 
+const singleEvent = async eventId => {
+  const { _doc, id, creator } = await Event.findById(eventId).catch(err => { throw err });
+
+  return {
+    ..._doc,
+    _id: id,
+    creator: user.bind(this, creator)
+  }
+};
 
 const user = async userId => {
   const { _doc, id } = await User.findById(userId).catch(err => { throw err });
@@ -48,11 +57,12 @@ module.exports = {
       {
         ..._doc,
         _id: id,
+        user: user.bind(this, _doc.user),
+        event: singleEvent.bind(this, _doc.event),
         createdAt: new Date(_doc.createdAt).toISOString(),
         updatedAt: new Date(_doc.updatedAt).toISOString()
       }
     ));
-
   },
 
   createEvent: async ({ eventInput: { title, description, price, date }}) => {
@@ -64,7 +74,6 @@ module.exports = {
       date: new Date(date),
       creator: '5f1705c92281ee3b60af7a55'
     });
-
 
     const { _doc: doc } = await event.save().catch(err => { throw err });
     
@@ -81,8 +90,10 @@ module.exports = {
 
     creator.createdEvents.push(event);
     await creator.save().catch(err => { throw err });
+    
     return createdEvent;
   },
+
   createUser: async ({ userInput: { email, password}}) => {
     const hasUser = await User.findOne({ email }).catch(err => { throw err });
     if(hasUser) throw new Error('User exists already!');
@@ -111,6 +122,8 @@ module.exports = {
     return {
       ..._doc,
       _id: id,
+      user: user.bind(this, _doc.user),
+      event: singleEvent.bind(this, _doc.event),
       createdAt: new Date(_doc.createdAt).toISOString(),
       updatedAt: new Date(_doc.updatedAt).toISOString()
     }
