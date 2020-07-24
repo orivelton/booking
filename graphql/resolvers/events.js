@@ -8,7 +8,11 @@ module.exports = {
     return events.map(event => transformEvent(event));
   },
 
-  createEvent: async ({ eventInput: { title, description, price, date }}) => {
+  createEvent: async ({ eventInput: { title, description, price, date }}, req) => {
+    if(!req.isAuth) {
+      throw new Error('Unauthenticated!');
+    }
+
     let createdEvent;
     const event = new Event({
       title,

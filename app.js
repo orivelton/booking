@@ -5,11 +5,14 @@ const mongoose = require('mongoose');
 
 const graphQlSchema = require('./graphql/schema');
 const graphQlResolvers = require('./graphql/resolvers');
+const isAuth = require('./middleware/is-auth');
 const { MONGO_USER, MONGO_PASSWORD, MONGO_DB} = process.env;
 
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use(isAuth);
 
 app.use('/graphql', graphqlHTTP({
   schema: graphQlSchema,
