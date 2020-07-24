@@ -20,7 +20,7 @@ module.exports = {
   },
 
   login: async ({ email, password }) => {
-    const user = User.findOne({ email }).catch(err => { throw err });
+    const user = await User.findOne({ email }).catch(err => { throw err });
 
     if(!user) {
       throw new Error('User does not exist!');
@@ -32,7 +32,7 @@ module.exports = {
       throw new Error('Password is incorrect!');
     }
 
-    const token = jwt.sign({
+    const token = await jwt.sign({
       userId: user.id,
       email: user.email
     },
