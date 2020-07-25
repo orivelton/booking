@@ -1,0 +1,93 @@
+# mutation {
+#   cancelBooking(
+#     bookingId: "5f1869808d464b2ae80259e6"
+#   ) {
+#     title
+#     creator {
+#       email
+#     }
+#   }
+# }
+
+
+# query {
+#   bookings {
+#     _id
+#     createdAt
+#     updatedAt
+#     event {
+#       title
+#       creator {
+#         email
+#       }
+#     }
+#   }
+# }
+
+# mutation {
+#   bookEvent(
+#     eventId: "5f170ad0ec82433fa0d49984"
+#   ) {
+#     _id
+#     createdAt
+#     updatedAt
+#     user {
+#       email
+#     }
+#   }
+# }
+
+
+query {
+  events {
+    title
+    _id
+    date
+	}
+}
+
+
+
+
+# query {
+#   events {
+#     title
+#     date
+#     creator {
+#       email
+#       createdEvents {
+#         _id
+#         title
+#       }
+#     }
+#   }
+# }
+
+
+# mutation {
+#   createEvent(
+#     eventInput:{
+#       title: "refactor",
+#       description: "Refactor",
+#       price: 333.99,
+#       date: "2020-07-21T16:14:59.710Z"
+#     }
+#   ) {
+#     _id
+#     title
+#     creator {
+#       email
+#     }
+#   }
+# }
+
+# mutation {
+#   createUser(
+#     userInput: {
+#       email: "test1@test.com",
+#       password: "test1"
+#     }
+#   ) {
+#     _id
+#   }
+# }
