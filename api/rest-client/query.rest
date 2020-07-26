@@ -81,13 +81,13 @@ query {
 #   }
 # }
 
-# mutation {
-#   createUser(
-#     userInput: {
-#       email: "test1@test.com",
-#       password: "test1"
-#     }
-#   ) {
-#     _id
-#   }
-# }
+mutation {
+  createUser(
+    userInput: {
+      email: "test1@test.com",
+      password: "test1"
+    }
+  ) {
+    _id
+  }
+}
