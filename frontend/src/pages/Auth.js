@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Auth = () => {
+const AuthPage = () => {
   return(
     <p>
       Auth
@@ -8,4 +8,4 @@ const Auth = () => {
   )
 };
 
-export default Auth;
+export default AuthPage;

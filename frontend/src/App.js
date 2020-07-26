@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.scss';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
-import Auth from './pages/Auth';
+import AuthPage from './pages/Auth';
+import BookingsPage from './pages/Bookings';
+import EventsPage from './pages/Events';
 
 function App() {
   return (
@@ -9,9 +11,9 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Redirect from="/" to="/auth" exact />
-          <Route path="/auth" component={Auth} />
-          <Route path="/events" component={null} />
-          <Route path="/bookings" component={null} />
+          <Route path="/auth" component={AuthPage} />
+          <Route path="/events" component={EventsPage} />
+          <Route path="/bookings" component={BookingsPage} />
         </Switch>
       </BrowserRouter>
     </div>
