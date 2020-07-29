@@ -35,7 +35,9 @@ const AuthPage = () => {
     `
   };
 
-
+  const logout = () => {
+    
+  };
 
   const submitHandler = async e => {
     e.preventDefault();
@@ -62,43 +64,51 @@ const AuthPage = () => {
   };
 
   return(
-    <form onSubmit={submitHandler}>
-      <p>
-        <label htmlFor="email">
-          E-mail
-        </label>
-        <input 
-          type="email"
-          id="email"
-          name="email"
-          value={form.email}
-          onChange={updateField}
-          required 
-        />
-      </p>
+    <>
+      <form onSubmit={submitHandler}>
+        <p>
+          <label htmlFor="email">
+            E-mail
+          </label>
+          <input 
+            type="email"
+            id="email"
+            name="email"
+            value={form.email}
+            onChange={updateField}
+            required 
+          />
+        </p>
 
-      <p>
-        <label htmlFor="password">
-          Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={form.password}
-          onChange={updateField}
-          required
-        />
-      </p>
+        <p>
+          <label htmlFor="password">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={form.password}
+            onChange={updateField}
+            required
+          />
+        </p>
 
-      <button type="submit" id="createAccount">
-        Create Account
-      </button>
+        <button type="submit" id="createAccount">
+          Create Account
+        </button>
+        <br />
+        <button type="submit" id="login">
+          Login
+        </button>
+      </form>
       <br />
-      <button type="submit" id="login">
-        Login
-      </button>
-    </form>
+      {
+        <button onClick={logout}>
+          Logout
+        </button>
+      }
+    </>
   )
 };
 
